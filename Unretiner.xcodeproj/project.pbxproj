@@ -52,7 +52,7 @@
 		1713EFAE13E57A310019EA65 /* Icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Icon.icns; sourceTree = "<group>"; };
 		1713EFB313E588740019EA65 /* NSDroppableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDroppableView.h; sourceTree = "<group>"; };
 		1713EFB413E588740019EA65 /* NSDroppableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDroppableView.m; sourceTree = "<group>"; };
-		1713EFB613E58E800019EA65 /* NSBitmapImageRep+Resizing.h */ = {isa = PBXFileReference; fileEncoding = 4; path = "NSBitmapImageRep+Resizing.h"; sourceTree = "<group>"; };
+		1713EFB613E58E800019EA65 /* NSBitmapImageRep+Resizing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBitmapImageRep+Resizing.h"; sourceTree = "<group>"; };
 		1713EFB713E58E800019EA65 /* NSBitmapImageRep+Resizing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBitmapImageRep+Resizing.m"; sourceTree = "<group>"; };
 		17C3A36F13E3FF1600294FBE /* Unretiner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Unretiner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		17C3A37313E3FF1600294FBE /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
@@ -404,9 +404,9 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = macosx;
+				SDKROOT = "";
 			};
 			name = Debug;
 		};
