@@ -12,6 +12,7 @@
 
 static NSString* const kRetinaString = @"@2x";
 static NSString* const kHdString = @"-hd";
+static NSString* const kIpadHDString = @"-ipadhd";
 
 - (BOOL)unretina:(NSURL*)folder errors:(NSMutableArray*)errors warnings:(NSMutableArray*)warnings overwrite:(BOOL)overwrite {
     BOOL success = NO;
@@ -19,6 +20,7 @@ static NSString* const kHdString = @"-hd";
         // New path is the same file minus the @2x
         NSString* newFilename = [[self lastPathComponent] stringByReplacingOccurrencesOfString:@"@2x" withString:@""];
         newFilename = [newFilename stringByReplacingOccurrencesOfString:@"-hd" withString:@""];
+        newFilename = [newFilename stringByReplacingOccurrencesOfString:@"-ipadhd" withString:@"-ipad"];
         NSString* newPath = [NSString stringWithFormat:@"%@%@", [folder relativeString], newFilename];
         NSURL* newUrl = [NSURL URLWithString:newPath];
         
@@ -106,7 +108,7 @@ static NSString* const kHdString = @"-hd";
     // See if the file is a retina image
     NSString* lastComponent = [[self absoluteString] lastPathComponent];
     lastComponent = [lastComponent stringByDeletingPathExtension];
-    return [lastComponent hasSuffix:kRetinaString] || [lastComponent hasSuffix:kHdString];
+    return [lastComponent hasSuffix:kRetinaString] || [lastComponent hasSuffix:kHdString] || [lastComponent hasSuffix:kIpadHDString];
 }
 
 @end
