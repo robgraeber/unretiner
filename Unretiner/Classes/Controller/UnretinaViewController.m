@@ -11,7 +11,6 @@
 @implementation UnretinaViewController
 
 static NSString* const kRetinaString = @"@2x";
-static NSString* const kHdString = @"-hd";
 
 @synthesize checkBox;
 
@@ -135,7 +134,7 @@ static NSString* const kHdString = @"-hd";
 	[panel setAllowsMultipleSelection:YES];
 	[panel setDelegate:self];
 	[panel setCanCreateDirectories:YES];
-	panel.title = @"Select @2x or -hd retina files";
+	panel.title = @"Select your retina files";
     if ([panel runModal] == NSOKButton) {
         // Success, process all the files
         [self unretinaUrls:panel.URLs];

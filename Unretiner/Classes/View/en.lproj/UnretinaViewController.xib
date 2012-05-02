@@ -2,10 +2,10 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1070</int>
-		<string key="IBDocument.SystemVersion">11E2705</string>
+		<string key="IBDocument.SystemVersion">11D50d</string>
 		<string key="IBDocument.InterfaceBuilderVersion">2182</string>
-		<string key="IBDocument.AppKitVersion">1138.47</string>
-		<string key="IBDocument.HIToolboxVersion">569.00</string>
+		<string key="IBDocument.AppKitVersion">1138.32</string>
+		<string key="IBDocument.HIToolboxVersion">568.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
 			<string key="NS.object.0">2182</string>
@@ -63,7 +63,7 @@
 						<object class="NSTextFieldCell" key="NSCell" id="83377106">
 							<int key="NSCellFlags">604110400</int>
 							<int key="NSCellFlags2">138414080</int>
-							<string key="NSContents">Drag @2x or -hd named images here to Unretiner them. </string>
+							<string key="NSContents">Drag retina images here (with @2x or without @2x)</string>
 							<object class="NSFont" key="NSSupport">
 								<string key="NSName">Helvetica</string>
 								<double key="NSSize">16</double>

@@ -16,7 +16,18 @@ static NSString* const kIpadHDString = @"-ipadhd";
 
 - (BOOL)unretina:(NSURL*)folder errors:(NSMutableArray*)errors warnings:(NSMutableArray*)warnings overwrite:(BOOL)overwrite {
     BOOL success = NO;
-    if ([self isRetinaImage]) {
+    if (![self isRetinaImage]) {
+        NSString* lastComponent = [[self absoluteString] lastPathComponent];
+        NSString *pathExtension = [lastComponent pathExtension];
+        NSMutableString *afileName = [[lastComponent stringByDeletingPathExtension] mutableCopy];
+        [afileName appendFormat:@"@2x.%@",pathExtension];
+        NSString* copyURL = [NSString stringWithFormat:@"%@%@", [folder relativeString], afileName];
+        NSLog(@"%@",copyURL);
+        NSError *error;
+        [[NSFileManager defaultManager] copyItemAtURL:self toURL:[NSURL URLWithString:copyURL] error:&error];
+        
+    }
+    //if ([self isRetinaImage]) {
         // New path is the same file minus the @2x
         NSString* newFilename = [[self lastPathComponent] stringByReplacingOccurrencesOfString:@"@2x" withString:@""];
         newFilename = [newFilename stringByReplacingOccurrencesOfString:@"-hd" withString:@""];
@@ -71,18 +82,19 @@ static NSString* const kIpadHDString = @"-ipadhd";
         }
         else {
             // Invalid
-            [errors addObject:[NSString stringWithFormat:@"%@ : Appears to be invalid", [[self absoluteString] lastPathComponent]]];
+        //    [errors addObject:[NSString stringWithFormat:@"%@ : Appears to be invalid", [[self absoluteString] lastPathComponent]]];
         }
         
         // Cleanup
         if (sourceImage) {
             [sourceImage release];
         }
-    }
-    else if (errors) {
+   // }
+    //else if (errors) {
         // Not a valid retina file
-        [errors addObject:[NSString stringWithFormat:@"%@ : Not a @2x or -hd file", [[self absoluteString] lastPathComponent]]];
-    }
+        
+    //    [errors addObject:[NSString stringWithFormat:@"%@ : Not a @2x or -hd file", [[self absoluteString] lastPathComponent]]];
+   // }
     
     return success;
 }
