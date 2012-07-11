@@ -37,15 +37,21 @@ static NSString* const kHdString = @"-hd";
 			[sourceImage setSize:NSMakeSize([rep pixelsWide], [rep pixelsHigh])]; 
             
             // Warn if either dimension is odd
-			if (((int)[sourceImage size].width) % 2 != 0 || ((int)[sourceImage size].height) % 2 != 0) {
+			if (((((int)[sourceImage size].width) % 2 != 0) && (((int)[sourceImage size].width) != 1)) ||
+				((((int)[sourceImage size].height) % 2 != 0) && (((int)[sourceImage size].height) != 1)))
+			{
 				[warnings addObject:[NSString stringWithFormat:@"%@ : has dimensions not divisible by 2", [[self absoluteString] lastPathComponent]]];
 			}
             
             // Determine the image type
             NSBitmapImageFileType imageType = [self imageType];
             if ((int)imageType >= 0) {
-                // Create a bitmap representation
-                NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithWidth:[sourceImage size].width / 2.0 andHeight:[sourceImage size].height / 2.0];
+                
+				CGFloat _newWidth = ((((int)[sourceImage size].width) == 1) ? 1 : ([sourceImage size].width / 2.0));
+				CGFloat _newHeight = ((((int)[sourceImage size].height) == 1) ? 1 : ([sourceImage size].height / 2.0));
+				
+				// Create a bitmap representation
+                NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithWidth:_newWidth andHeight:_newHeight];
                 [imageRep setImage:sourceImage];
 
                 // Write out the new image
