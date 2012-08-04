@@ -24,10 +24,8 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    // Add the view from our controller
-    viewController = [[UnretinaViewController alloc] initWithNibName:@"UnretinaViewController" bundle:nil];
-    viewController.view.bounds = self.view.bounds;
-    [view addSubview:viewController.view];
+    // Add the view from our controller:
+	[self makeViewControllerIfNeeded];
 }
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication {
@@ -43,7 +41,18 @@
 	}
     
     // Send to the controller
-    [viewController unretinaUrls:urls];
+	[self makeViewControllerIfNeeded];
+	[viewController unretinaUrls:urls];
+}
+
+- (void)makeViewControllerIfNeeded;
+{
+	if (viewController == nil) {
+		NSLog(@"%s Instantiating a view controller.", __func__);
+		viewController = [[UnretinaViewController alloc] initWithNibName:@"UnretinaViewController" bundle:nil];
+		viewController.view.bounds = self.view.bounds;
+		[view addSubview:viewController.view];
+	}
 }
 
 - (void)appication:(NSApplication*)sender openFile:(NSString*)file {
