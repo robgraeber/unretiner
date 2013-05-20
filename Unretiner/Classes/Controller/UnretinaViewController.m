@@ -35,22 +35,6 @@ static NSString* const kRetinaString = @"@2x";
 
 #pragma mark - Private Methods
 
-// Retrieves a folder to save to
-- (NSURL*)getSaveFolder:(NSURL*)url {
-    NSOpenPanel *panel = [NSOpenPanel openPanel]; 
-    [panel setCanChooseDirectories:YES]; 
-    [panel setCanChooseFiles:NO];
-    [panel setAllowsMultipleSelection:NO];
-    [panel setDirectoryURL:url];
-    panel.prompt = @"Export Here";
-    panel.title = @"Select folder to save converted files.";
-    if ([panel runModal] == NSOKButton) {
-        // Got it, return the URL
-        return [panel URL];
-    }
-    
-    return nil;
-}
 
 - (BOOL)isDirectory:(NSURL*)url {
     // Determine if it is a directory
@@ -83,53 +67,48 @@ static NSString* const kRetinaString = @"@2x";
 // Converts an array of URLs to non retina files
 - (void)unretinaUrls:(NSArray*)urls {
     // Extract the default export folder
-    if ([urls count] > 0) {
-        NSURL* firstUrl = [urls objectAtIndex:0];
-        if (![self isDirectory:firstUrl]) {
-            firstUrl = [firstUrl URLByDeletingLastPathComponent];
-        }
-        NSURL* savePath = [self getSaveFolder:firstUrl];
-            
-        if (savePath) {
-            // Arrays to store warnings and errors
-            NSMutableArray* errors = [NSMutableArray array];
-            NSMutableArray* warnings = [NSMutableArray array];
-            
-            // Do it!
-            [self unretinaUrls:urls savePath:savePath errors:errors warnings:warnings recursive:YES];
-            
-            // Show the results
-            if ([errors count] > 0 || [warnings count] > 0) {
-                NSMutableString* message = [NSMutableString string];
-                if ([warnings count] > 0) {
-                    [message appendString:@"Please check the following warnings:\r\n\r\n"];
-                    for (NSString* s in warnings) {
-                        [message appendFormat:@"%@\r\n", s];
-                    }
-                    [message appendString:@"\r\n\r\n"];
+    if ([urls count] == 0) return;
+    NSURL* firstUrl = [urls objectAtIndex:0];
+    NSURL *savePath = [firstUrl URLByDeletingLastPathComponent];
+    
+    if (savePath) {
+        // Arrays to store warnings and errors
+        NSMutableArray* errors = [NSMutableArray array];
+        NSMutableArray* warnings = [NSMutableArray array];
+        
+        // Do it!
+        [self unretinaUrls:urls savePath:savePath errors:errors warnings:warnings recursive:YES];
+        
+        // Show the results
+        if ([errors count] > 0 || [warnings count] > 0) {
+            NSMutableString* message = [NSMutableString string];
+            if ([warnings count] > 0) {
+                [message appendString:@"Please check the following warnings:\r\n\r\n"];
+                for (NSString* s in warnings) {
+                    [message appendFormat:@"%@\r\n", s];
                 }
-                
-                if ([errors count] > 0) {
-                    [message appendString:@"The following errors occured:\r\n\r\n"];
-                    for (NSString* s in errors) {
-                        [message appendFormat:@"%@\r\n", s];
-                    }
-                }
-                
-                NSRunAlertPanel(@"Conversion Complete.", 
-                                message,
-                                @"OK", nil, nil);
+                [message appendString:@"\r\n\r\n"];
             }
+            
+            if ([errors count] > 0) {
+                [message appendString:@"The following errors occured:\r\n\r\n"];
+                for (NSString* s in errors) {
+                    [message appendFormat:@"%@\r\n", s];
+                }
+            }
+            
+            NSRunAlertPanel(@"Conversion Complete.",
+                            message,
+                            @"OK", nil, nil);
         }
     }
 }
-
 #pragma mark - View Events
 
-- (IBAction)onSelectFolder:(id)sender {  
+- (IBAction)onSelectFolder:(id)sender {
     // Select the files to convert
-	NSOpenPanel *panel = [NSOpenPanel openPanel]; 
-	[panel setCanChooseDirectories:YES]; 
+	NSOpenPanel *panel = [NSOpenPanel openPanel];
+	[panel setCanChooseDirectories:YES];
 	[panel setCanChooseFiles:YES];
 	[panel setAllowsMultipleSelection:YES];
 	[panel setDelegate:self];
@@ -139,28 +118,6 @@ static NSString* const kRetinaString = @"@2x";
         // Success, process all the files
         [self unretinaUrls:panel.URLs];
     }
-}
-
-#pragma mark - NSOpenSavePanelDelegate
-
-- (BOOL)allowFile:(NSString*)filename {
-    // Allow directories
-    NSURL* url = [NSURL fileURLWithPath:filename];
-    if (url && [self isDirectory:url])
-        return YES;
-    
-    // See if the file is a retina image
-    return url && [url isRetinaImage];
-}
-
-- (BOOL)panel:(id)sender shouldEnableURL:(NSURL *)url {
-    // Only enable valid files
-	return [self allowFile:[url path]];
-}
-
-- (BOOL)panel:(id)sender shouldShowFilename:(NSString *)filename {
-    // Only show valid files
-	return [self allowFile:filename];
 }
 
 #pragma mark - Drag and Drop
