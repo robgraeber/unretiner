@@ -46,8 +46,7 @@
 						<int key="NSvFlags">268</int>
 						<string key="NSFrame">{{0, 30}, {480, 240}}</string>
 						<reference key="NSSuperview" ref="1005"/>
-						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="935938549"/>
+						<reference key="NSNextKeyView" ref="73450366"/>
 						<string key="NSReuseIdentifierKey">_NS:499</string>
 						<string key="NSClassName">NSDroppableView</string>
 					</object>
@@ -56,14 +55,13 @@
 						<int key="NSvFlags">256</int>
 						<string key="NSFrame">{{31, 140}, {420, 20}}</string>
 						<reference key="NSSuperview" ref="1005"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="611662926"/>
 						<string key="NSReuseIdentifierKey">_NS:3936</string>
 						<bool key="NSEnabled">YES</bool>
 						<object class="NSTextFieldCell" key="NSCell" id="83377106">
 							<int key="NSCellFlags">603979840</int>
 							<int key="NSCellFlags2">138414080</int>
-							<string key="NSContents">Drag @4x, @2x, -ipadhd, or -hd images here to Unretiner.</string>
+							<string key="NSContents">Drag normal images to add @4x at the end of them.</string>
 							<object class="NSFont" key="NSSupport">
 								<string key="NSName">Helvetica</string>
 								<double key="NSSize">16</double>
@@ -92,7 +90,6 @@
 						<int key="NSvFlags">268</int>
 						<string key="NSFrame">{{383, 1}, {90, 30}}</string>
 						<reference key="NSSuperview" ref="1005"/>
-						<reference key="NSWindow"/>
 						<bool key="NSEnabled">YES</bool>
 						<object class="NSButtonCell" key="NSCell" id="307126316">
 							<int key="NSCellFlags">-2080374784</int>
@@ -125,7 +122,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{11, 3}, {29, 25}}</string>
 						<reference key="NSSuperview" ref="1005"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="557719149"/>
 						<bool key="NSEnabled">YES</bool>
 						<object class="NSButtonCell" key="NSCell" id="475097997">
@@ -160,8 +156,7 @@
 						</set>
 						<string key="NSFrameSize">{480, 270}</string>
 						<reference key="NSSuperview" ref="1005"/>
-						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="73450366"/>
+						<reference key="NSNextKeyView" ref="38194497"/>
 						<string key="NSReuseIdentifierKey">_NS:1658</string>
 						<bool key="NSEnabled">YES</bool>
 						<object class="NSImageCell" key="NSCell" id="941985466">
@@ -183,8 +178,7 @@
 				</array>
 				<string key="NSFrameSize">{480, 270}</string>
 				<reference key="NSSuperview"/>
-				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView" ref="38194497"/>
+				<reference key="NSNextKeyView" ref="935938549"/>
 				<string key="NSClassName">NSView</string>
 			</object>
 		</array>
@@ -351,59 +345,7 @@
 			<nil key="sourceID"/>
 			<int key="maxID">20</int>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes">
-			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
-				<object class="IBPartialClassDescription">
-					<string key="className">NSDroppableView</string>
-					<string key="superclassName">NSView</string>
-					<object class="NSMutableDictionary" key="outlets">
-						<string key="NS.key.0">delegate</string>
-						<string key="NS.object.0">id</string>
-					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<string key="NS.key.0">delegate</string>
-						<object class="IBToOneOutletInfo" key="NS.object.0">
-							<string key="name">delegate</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/NSDroppableView.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UnretinaViewController</string>
-					<string key="superclassName">NSViewController</string>
-					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">onSelectFolder:</string>
-						<string key="NS.object.0">id</string>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<string key="NS.key.0">onSelectFolder:</string>
-						<object class="IBActionInfo" key="NS.object.0">
-							<string key="name">onSelectFolder:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<string key="NS.key.0">checkBox</string>
-						<string key="NS.object.0">NSButton</string>
-					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<string key="NS.key.0">checkBox</string>
-						<object class="IBToOneOutletInfo" key="NS.object.0">
-							<string key="name">checkBox</string>
-							<string key="candidateClassName">NSButton</string>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/UnretinaViewController.h</string>
-					</object>
-				</object>
-			</array>
-		</object>
+		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaFramework</string>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
