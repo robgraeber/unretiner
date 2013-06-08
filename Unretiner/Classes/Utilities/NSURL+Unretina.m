@@ -18,20 +18,27 @@ static NSString* const kIpadHDString2 = @"@4x";
 - (BOOL)unretina:(NSURL*)folder errors:(NSMutableArray*)errors warnings:(NSMutableArray*)warnings overwrite:(BOOL)overwrite {
     BOOL success = NO;
     if (![self isRetinaImage]) {
-        NSString* lastComponent = [[self absoluteString] lastPathComponent];
-        NSString *pathExtension = [lastComponent pathExtension];
-        NSMutableString *afileName = [[lastComponent stringByDeletingPathExtension] mutableCopy];
-        [afileName appendFormat:@"@2x.%@",pathExtension];
-        NSString* copyURL = [NSString stringWithFormat:@"%@%@", [folder relativeString], afileName];
-        [afileName release];
-        NSError *error;
-        [[NSFileManager defaultManager] copyItemAtURL:self toURL:[NSURL URLWithString:copyURL] error:&error];
-        
+        if (![self isAlreadyRenamed]) {
+            //renames all normal image files to @1x
+            NSString * fullFileName = [self lastPathComponent];
+            NSString * fileExtension = [fullFileName pathExtension];
+            NSString * fileName = [fullFileName stringByDeletingPathExtension];
+            NSString * newFileName = [fileName stringByAppendingString:@"@1x"];
+            NSString * newFullFileName = [newFileName stringByAppendingPathExtension:fileExtension];
+            NSString *oldPath = self.path;
+            
+            NSString *temp = [[oldPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-temp", newFullFileName]];
+            NSString *target = [[oldPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:newFullFileName];
+            
+            [[NSFileManager defaultManager] moveItemAtPath:oldPath toPath:temp error:nil];
+            [[NSFileManager defaultManager] moveItemAtPath:temp toPath:target error:nil];
+        }
+        return YES;
     }
     //if ([self isRetinaImage]) {
     // New path is the same file minus the @2x
-    NSString* newFilename = [[self lastPathComponent] stringByReplacingOccurrencesOfString:@"@2x" withString:@""];
-    newFilename = [newFilename stringByReplacingOccurrencesOfString:@"-hd" withString:@""];
+    NSString* newFilename = [[self lastPathComponent] stringByReplacingOccurrencesOfString:@"@2x" withString:@"@1x"];
+    newFilename = [newFilename stringByReplacingOccurrencesOfString:@"-hd" withString:@"@1x"];
     newFilename = [newFilename stringByReplacingOccurrencesOfString:@"-ipadhd" withString:@"@2x"];
     newFilename = [newFilename stringByReplacingOccurrencesOfString:@"@4x" withString:@"@2x"];
     NSString* newPath = [NSString stringWithFormat:@"%@%@", [folder relativeString], newFilename];
@@ -110,6 +117,7 @@ static NSString* const kIpadHDString2 = @"@4x";
     if([newUrl isRetinaImage]){
         [newUrl unretina:folder errors:errors warnings:warnings overwrite:overwrite];
     }
+   
     return success;
 }
 
@@ -142,6 +150,13 @@ static NSString* const kIpadHDString2 = @"@4x";
     lastComponent = [lastComponent stringByDeletingPathExtension];
     return [lastComponent hasSuffix:kRetinaString] || [lastComponent hasSuffix:kHdString] || [lastComponent hasSuffix:kIpadHDString]|| [lastComponent hasSuffix:kIpadHDString2];
 ;
+}
+- (BOOL)isAlreadyRenamed {
+    // See if the file is a retina image
+    NSString* lastComponent = [[self absoluteString] lastPathComponent];
+    lastComponent = [lastComponent stringByDeletingPathExtension];
+    return [lastComponent hasSuffix:@"1x"];
+    ;
 }
 
 @end
