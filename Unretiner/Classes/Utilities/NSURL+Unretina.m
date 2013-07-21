@@ -68,28 +68,22 @@ static NSString* const kIpadHDString2 = @"@4x";
         // Determine the image type
         NSBitmapImageFileType imageType = [self imageType];
         if ((int)imageType >= 0) {
+            CGDataProviderRef imgDataProvider = CGDataProviderCreateWithCFData((CFDataRef)[NSData dataWithContentsOfURL:self]);
+            CGImageRef imageRef = CGImageCreateWithPNGDataProvider(imgDataProvider, NULL, true, kCGRenderingIntentDefault);
+            imageRef = [self createScaledCGImageFromCGImage:imageRef WithScale:0.5f];
             
-            CGFloat _newWidth = ((((int)[sourceImage size].width) == 1) ? 1 : ([sourceImage size].width / 2.0));
-            CGFloat _newHeight = ((((int)[sourceImage size].height) == 1) ? 1 : ([sourceImage size].height / 2.0));
-            
-            // Create a bitmap representation
-            NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithWidth:_newWidth andHeight:_newHeight];
-            [imageRep setImage:sourceImage];
             
             // Write out the new image
-            NSData *imageData = [imageRep representationUsingType:imageType properties:nil];
-            if (![imageData writeToURL:newUrl atomically:YES]) {
+            if (![self CGImageWriteToFile:imageRef WithPath:newUrl]) {
                 [errors addObject:[NSString stringWithFormat:@"%@ : Error creating file", newPath]];
-            }
-            else {
+            }else {
+                //[self unpremultiplyFileWithURL:newUrl];
                 success = YES;
             }
-        }
-        else {
+        }else {
             [errors addObject:[NSString stringWithFormat:@"%@ : Unknown image type", [[self absoluteString] lastPathComponent]]];
         }
-    }
-    else {
+    }else {
         // Invalid
         //    [errors addObject:[NSString stringWithFormat:@"%@ : Appears to be invalid", [[self absoluteString] lastPathComponent]]];
     }
@@ -120,6 +114,119 @@ static NSString* const kIpadHDString2 = @"@4x";
    
     return success;
 }
+- (BOOL) CGImageWriteToFile:(CGImageRef) image WithPath: (NSURL *)url {
+    CFURLRef urlRef = (CFURLRef)url;
+    CGImageDestinationRef destination = CGImageDestinationCreateWithURL(urlRef, kUTTypePNG, 1, NULL);
+    CGImageDestinationAddImage(destination, image, nil);
+    
+    if (!CGImageDestinationFinalize(destination)) {
+        return NO;
+        NSLog(@"Failed to write image to %@", [url absoluteString]);
+    }
+    CFRelease(destination);
+    return YES;
+}
+- (CGImageRef)createScaledCGImageFromCGImage:(CGImageRef)image WithScale:(float) scale{
+    int width = CGImageGetWidth(image) * scale;
+    int height = CGImageGetHeight(image) * scale;
+
+    // create context, keeping original image properties
+    CGContextRef context = CGBitmapContextCreate(NULL, width, height,
+                                                 CGImageGetBitsPerComponent(image),
+                                                 CGImageGetBytesPerRow(image),
+                                                 CGImageGetColorSpace(image),
+                                                 kCGImageAlphaPremultipliedLast);
+    CGContextSetAllowsAntialiasing(context, YES);
+    CGContextSetInterpolationQuality(context, kCGInterpolationHigh);
+    if(context == NULL)
+        return nil;
+    
+    // draw image to context (resizing it)
+    CGContextDrawImage(context, CGRectMake(0, 0, width, height), image);
+    // extract resulting image from context
+    CGImageRef imgRef = CGBitmapContextCreateImage(context);
+    CGContextRelease(context);
+    return imgRef;
+}
+- (void)unpremultiplyFileWithURL:(NSURL *)filePathURL
+{
+    NSString *path = [[filePathURL filePathURL] path];
+    
+    CGImageSourceRef imageSource = CGImageSourceCreateWithURL((CFURLRef)filePathURL, NULL);
+    if(imageSource) {
+        CGImageRef premultipliedImage = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
+        CFRelease(imageSource);
+        
+        if(premultipliedImage) {
+            CGImageRef unpremultipliedImage = [self newUnpremultipliedImageWithImage:premultipliedImage];
+            CFRelease(premultipliedImage);
+            if(unpremultipliedImage) {
+                NSString *extension = [path pathExtension];
+                NSString *noExtension = [path stringByDeletingPathExtension];
+                
+                NSString *newPath = [noExtension stringByAppendingPathExtension:extension];
+                
+                CGImageDestinationRef pngDestination = CGImageDestinationCreateWithURL((CFURLRef)[NSURL fileURLWithPath:newPath],
+                                                                                       kUTTypePNG, 1, NULL);
+                CGImageDestinationAddImage(pngDestination, unpremultipliedImage, NULL);
+                CGImageDestinationFinalize(pngDestination);
+                CFRelease(pngDestination);
+                
+                CFRelease(unpremultipliedImage);
+            }
+        }
+    }
+}
+
+static void CGBitmapContextReleaseCFTypeRefCallback(void *releaseInfo, void *data)
+{
+    CFRelease(releaseInfo);
+}
+
+- (CGImageRef)newUnpremultipliedImageWithImage:(CGImageRef)image
+{
+    CGImageRef unpremltipliedImage = NULL;
+    
+    CGColorSpaceRef imageColorSpace = CGImageGetColorSpace(image);
+    if(imageColorSpace) {
+        CFRetain(imageColorSpace);
+    } else {
+        imageColorSpace = CGColorSpaceCreateDeviceRGB();
+    }
+    
+    BOOL goodBitmapInfo = NO;
+    CGBitmapInfo bitmapInfo = CGImageGetBitmapInfo(image);
+    if((bitmapInfo & kCGImageAlphaLast) == kCGImageAlphaLast) {
+        bitmapInfo &= ~kCGBitmapAlphaInfoMask;
+        bitmapInfo |= kCGImageAlphaPremultipliedLast;
+        goodBitmapInfo = YES;
+    } else if((bitmapInfo & kCGImageAlphaFirst) == kCGImageAlphaFirst) {
+        bitmapInfo &= ~kCGBitmapAlphaInfoMask;
+        bitmapInfo |= kCGImageAlphaPremultipliedFirst;
+        goodBitmapInfo = YES;
+    } else {
+        NSLog(@"Unexpected bitmap info alpha information - bitmap info is 0x%02lx - can't unpremultiply", (long)bitmapInfo);
+    }
+    
+    if(goodBitmapInfo) {
+        CFDataRef data = CGDataProviderCopyData(CGImageGetDataProvider(image));
+        CGContextRef premultContext = CGBitmapContextCreateWithData((void *)CFDataGetBytePtr(data),
+                                                                    CGImageGetWidth(image), CGImageGetHeight(image),
+                                                                    CGImageGetBitsPerComponent(image), CGImageGetBytesPerRow(image),
+                                                                    imageColorSpace, bitmapInfo,
+                                                                    CGBitmapContextReleaseCFTypeRefCallback, (void *)CFRetain(data));
+        
+        unpremltipliedImage = CGBitmapContextCreateImage(premultContext);
+        
+        CFRelease(premultContext);
+        CFRelease(data);
+    }
+    
+    CFRelease(imageColorSpace);
+    
+    return unpremltipliedImage;
+}
+
 
 - (NSBitmapImageFileType)imageType {
     NSString* extension = [[self pathExtension] lowercaseString];
