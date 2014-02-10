@@ -1,15 +1,20 @@
-Unretiner from [Mac App Store](http://itunes.apple.com/us/app/unretiner/id411277085?mt=12)
+Forked from cbowns. Creates standard res images from retina size images in a simple drag-and-drop tool for Mac OS X. Modified to support specific naming conventions for Cocos2d and Unity (2d toolkit).
 
-Please fork and improve :)
+-- 3 Versions/Branches --
 
-TODO
-----
-* Test on Snow Leopard
-* Unit test
+Master - Cocos2d Version:  
+Downsizes -ipadhd, @4x, -hd, and @2x-named images to standard res versions.  
+Example Input: `sprite-ipadhd.png`  
+Example Output: `sprite-hd.png`, `sprite.png` 
 
-Requested Features
-------------------
-* Automatically watch a folder and convert instantly / Applescript Support
-* Add better resizing algorithms
-* Sharpness filter
-* Option to save to same folder without prompt
+Unity Branch - 2d Toolkit Version:  
+Downsizes -ipadhd, @4x, -hd, and @2x-named images to standard res versions.  
+Example Input: `sprite@4x.png`  
+Example Output: `sprite@2x.png`, `sprite@1x.png`  
+
+@4x Renamer - Renamer version: 
+Doesn't downsize, instead appends "@4x" to the end of all images to format them.  
+Example Input: `sprite.png`  
+Example Output: `sprite@4x.png`   
+  
+![](http://i.imgur.com/PZfzHdN.png)
