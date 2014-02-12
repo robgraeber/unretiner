@@ -54,7 +54,7 @@
 					<object class="NSTextField" id="73450366">
 						<reference key="NSNextResponder" ref="1005"/>
 						<int key="NSvFlags">256</int>
-						<string key="NSFrame">{{38, 136}, {405, 20}}</string>
+						<string key="NSFrame">{{31, 140}, {420, 20}}</string>
 						<reference key="NSSuperview" ref="1005"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="611662926"/>
@@ -63,7 +63,7 @@
 						<object class="NSTextFieldCell" key="NSCell" id="83377106">
 							<int key="NSCellFlags">603979840</int>
 							<int key="NSCellFlags2">138414080</int>
-							<string key="NSContents">Drag @2x or -hd named images here to Unretiner them.</string>
+							<string key="NSContents">Drag @4x, @2x, -ipadhd, or -hd images here to Unretiner.</string>
 							<object class="NSFont" key="NSSupport">
 								<string key="NSName">Helvetica</string>
 								<double key="NSSize">16</double>
@@ -262,10 +262,10 @@
 						<reference key="object" ref="1005"/>
 						<array class="NSMutableArray" key="children">
 							<reference ref="611662926"/>
-							<reference ref="73450366"/>
 							<reference ref="557719149"/>
 							<reference ref="935938549"/>
 							<reference ref="38194497"/>
+							<reference ref="73450366"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
